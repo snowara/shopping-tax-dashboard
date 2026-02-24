@@ -11,7 +11,6 @@
     python3 app.py --setup                  (설정 마법사 재실행)
 """
 import argparse
-import asyncio
 import json
 import os
 import shutil
@@ -504,29 +503,12 @@ def api_open_platform(platform_id):
     if not platform:
         return jsonify({"status": "error", "message": "알 수 없는 플랫폼"}), 400
 
-    # Playwright를 별도 스레드에서 비동기 실행
-    def run_playwright():
-        try:
-            from platform_opener import open_platform_simple
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            result = loop.run_until_complete(
-                open_platform_simple(platform["name"], str(q_dir))
-            )
-            loop.close()
-            if result["status"] == "error":
-                print(f"  ❌ {result['message']}")
-        except ImportError:
-            print("  ⚠️ playwright 미설치 — pip install playwright && playwright install chromium")
-        except Exception as e:
-            print(f"  ❌ Playwright 오류: {e}")
-
-    thread = threading.Thread(target=run_playwright, daemon=True)
-    thread.start()
+    # 기본 브라우저로 셀러센터 열기
+    webbrowser.open(platform["seller_url"])
 
     return jsonify({
         "status": "success",
-        "message": f"{platform['name']} 셀러센터 여는 중...",
+        "message": f"{platform['name']} 셀러센터 열림",
     })
 
 
