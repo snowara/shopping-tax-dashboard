@@ -1,0 +1,73 @@
+name: Build Installer
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: 세무자료수집-Windows
+          - os: macos-latest
+            artifact: 세무자료수집-macOS
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build executable
+        run: python build.py --clean
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: dist/세무자료수집/
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: 세무자료수집-Windows
+          path: windows/
+
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: 세무자료수집-macOS
+          path: macos/
+
+      - name: Create ZIP archives
+        run: |
+          cd windows && zip -r ../세무자료수집-Windows.zip . && cd ..
+          cd macos && zip -r ../세무자료수집-macOS.zip . && cd ..
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            세무자료수집-Windows.zip
+            세무자료수집-macOS.zip
+          generate_release_notes: true
