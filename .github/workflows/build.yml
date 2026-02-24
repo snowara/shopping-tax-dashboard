@@ -34,6 +34,8 @@ jobs:
 
       - name: Build executable
         run: python build.py --clean
+        env:
+          PYTHONIOENCODING: utf-8
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

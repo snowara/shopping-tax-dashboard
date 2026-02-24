@@ -11,11 +11,17 @@ PyInstaller 빌드 스크립트
     dist/세무자료수집.exe      (onefile 모드, Windows)
     dist/세무자료수집          (onefile 모드, macOS)
 """
+import io
 import os
 import sys
 import shutil
 import argparse
 from pathlib import Path
+
+# Windows 콘솔 한글 인코딩 문제 방지
+if sys.stdout.encoding != "utf-8":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 APP_NAME = "세무자료수집"
 ENTRY = "app.py"
