@@ -12,9 +12,11 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            artifact: 세무자료수집-Windows
+            artifact: TaxDashboard-Windows
+            zipname: 세무자료수집-Windows.zip
           - os: macos-latest
-            artifact: 세무자료수집-macOS
+            artifact: TaxDashboard-macOS
+            zipname: 세무자료수집-macOS.zip
 
     runs-on: ${{ matrix.os }}
 
@@ -52,24 +54,24 @@ jobs:
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
         with:
-          name: 세무자료수집-Windows
+          name: TaxDashboard-Windows
           path: windows/
 
       - name: Download macOS artifact
         uses: actions/download-artifact@v4
         with:
-          name: 세무자료수집-macOS
+          name: TaxDashboard-macOS
           path: macos/
 
       - name: Create ZIP archives
         run: |
-          cd windows && zip -r ../세무자료수집-Windows.zip . && cd ..
-          cd macos && zip -r ../세무자료수집-macOS.zip . && cd ..
+          cd windows && zip -r ../TaxDashboard-Windows.zip . && cd ..
+          cd macos && zip -r ../TaxDashboard-macOS.zip . && cd ..
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            세무자료수집-Windows.zip
-            세무자료수집-macOS.zip
+            TaxDashboard-Windows.zip
+            TaxDashboard-macOS.zip
           generate_release_notes: true
