@@ -4,7 +4,11 @@
 
 세무사에게 전달할 자료를 드래그&드롭으로 수집하고, 체크리스트와 카톡 메시지를 자동 생성합니다.
 
-![Dashboard Preview](https://via.placeholder.com/800x400?text=Dashboard+Screenshot)
+### 부가세 탭
+![부가세 탭](screenshot_vat.png)
+
+### 법인세 탭
+![법인세 탭](screenshot_corp.png)
 
 ## 주요 기능
 
