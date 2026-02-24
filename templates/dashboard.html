@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ company_name }} 세무 자료 수집</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1B2A4A;
+            --primary-light: #2a3f6a;
+            --secondary: #4A6FA5;
+            --accent: #E8B931;
+            --accent-hover: #d4a62a;
+            --bg: #F5F7FA;
+            --card-bg: #FFFFFF;
+            --text: #333333;
+            --text-light: #666666;
+            --text-muted: #999999;
+            --border: #E0E0E0;
+            --success: #22C55E;
+            --success-bg: #F0FDF4;
+            --success-border: #BBF7D0;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --danger-light: #FEF2F2;
+            --drop-bg: #F0F4FF;
+            --drop-border: #93B5FF;
+            --shadow: 0 2px 8px rgba(27, 42, 74, 0.08);
+            --shadow-hover: 0 4px 16px rgba(27, 42, 74, 0.15);
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ━━━ Header ━━━ */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 24px 32px 0;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-sub {
+            font-size: 13px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .period-select {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .period-select option {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ━━━ Tabs ━━━ */
+        .tabs {
+            display: flex;
+            gap: 0;
+        }
+
+        .tab {
+            padding: 12px 28px;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .tab:hover {
+            color: rgba(255,255,255,0.85);
+        }
+
+        .tab.active {
+            color: white;
+            font-weight: 700;
+            border-bottom-color: var(--accent);
+        }
+
+        .tab .tab-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 1px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-left: 6px;
+        }
+
+        .tab.active .tab-badge {
+            background: var(--accent);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* ━━━ Progress Bar ━━━ */
+        .progress-section {
+            background: white;
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .progress-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .progress-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-light);
+            white-space: nowrap;
+        }
+
+        .progress-count {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .progress-count .total {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .progress-bar-wrap {
+            flex: 1;
+            background: #E8EDF5;
+            border-radius: 8px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            border-radius: 8px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-bar-fill.complete {
+            background: linear-gradient(90deg, var(--success), #16A34A);
+        }
+
+        .btn-package {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .btn-package.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .btn-package.active:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(232, 185, 49, 0.4);
+        }
+
+        /* ━━━ Deadline Banner ━━━ */
+        .deadline-banner {
+            background: var(--danger-light);
+            border-bottom: 1px solid #FECACA;
+            padding: 10px 32px;
+            font-size: 13px;
+            color: #991B1B;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .deadline-banner.show { display: flex; }
+
+        .deadline-banner strong {
+            color: var(--danger);
+        }
+
+        /* ━━━ Section Label (법인세) ━━━ */
+        .section-label {
+            padding: 20px 32px 8px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .section-label h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label h3 .count {
+            font-size: 12px;
+            font-weight: 500;
+            background: var(--primary);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 10px;
+        }
+
+        .section-label h3 .count.optional {
+            background: var(--text-muted);
+        }
+
+        /* ━━━ Grid ━━━ */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 12px 32px 28px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* ━━━ Tab Content ━━━ */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ━━━ Card ━━━ */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: all 0.25s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .card.collected {
+            border-color: var(--success-border);
+            background: var(--success-bg);
+        }
+
+        .card.dragover {
+            border-color: var(--drop-border);
+            background: var(--drop-bg);
+            border-style: dashed;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(74, 111, 165, 0.2);
+        }
+
+        .card-header {
+            padding: 16px 20px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .card-title-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .card-icon { font-size: 20px; flex-shrink: 0; }
+
+        .card-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.3;
+        }
+
+        .card-status {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .card-status.pending { background: #FEF3C7; color: #92400E; }
+        .card-status.done { background: #DCFCE7; color: #166534; }
+        .card-status.required { background: #FEE2E2; color: #991B1B; }
+
+        .card-desc {
+            padding: 0 20px 4px;
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .card-source {
+            padding: 0 20px 2px;
+            font-size: 11px;
+            color: var(--secondary);
+        }
+
+        /* ━━━ Drop Zone ━━━ */
+        .card-drop {
+            margin: 8px 16px;
+            padding: 18px;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 72px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .card.collected .card-drop {
+            border-style: solid;
+            border-color: var(--success-border);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .card-drop .drop-icon { font-size: 22px; color: var(--text-muted); }
+        .card.collected .card-drop .drop-icon { color: var(--success); }
+        .card-drop .drop-text { font-size: 12px; color: var(--text-muted); }
+        .card-drop .file-info { font-size: 12px; color: var(--success); font-weight: 500; word-break: break-all; }
+        .card-drop .file-meta { font-size: 11px; color: var(--text-muted); }
+        .card-drop input[type="file"] { display: none; }
+
+        /* ━━━ Multi-file list ━━━ */
+        .file-list-wrap {
+            width: 100%;
+            text-align: left;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .file-item:last-child { border-bottom: none; }
+
+        .file-item-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .file-item-name {
+            font-size: 12px;
+            color: var(--success);
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-item-size {
+            font-size: 10px;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .file-item-del {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            cursor: pointer;
+            padding: 2px 4px;
+            line-height: 1;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .file-item-del:hover {
+            color: var(--danger);
+            background: var(--danger-light);
+        }
+
+        .file-add-text {
+            font-size: 11px;
+            color: var(--secondary);
+            margin-top: 4px;
+            cursor: pointer;
+        }
+
+        .file-add-text:hover { text-decoration: underline; }
+
+        /* ━━━ Card Footer ━━━ */
+        .card-footer {
+            padding: 6px 16px 12px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-footer.with-open { justify-content: space-between; }
+
+        .btn-open {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-open:hover { background: var(--primary-light); }
+
+        .btn-delete {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .card.collected .btn-delete { opacity: 1; pointer-events: auto; }
+        .btn-delete:hover { color: var(--danger); border-color: var(--danger); }
+
+        /* ━━━ Toast ━━━ */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            background: var(--primary);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s ease;
+            max-width: 360px;
+        }
+
+        .toast.success { background: #166534; }
+        .toast.error { background: #991B1B; }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* ━━━ Modal ━━━ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 24px;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .modal-header h2 { font-size: 18px; font-weight: 700; }
+
+        .modal-body { padding: 24px; }
+
+        .modal-body .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 16px 0 8px;
+        }
+
+        .modal-body .section-title:first-child { margin-top: 0; }
+        .modal-body .file-list { font-size: 13px; line-height: 1.8; color: var(--text-light); }
+        .modal-body .missing-list { font-size: 13px; color: var(--danger); }
+        .modal-body .missing-opt-list { font-size: 13px; color: var(--text-muted); }
+
+        .modal-body .kakao-msg {
+            background: #FFF9E6;
+            border: 1px solid #FDE68A;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 13px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            font-family: monospace;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .btn-modal {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-modal.primary { background: var(--accent); color: var(--primary); }
+        .btn-modal.secondary { background: var(--border); color: var(--text); }
+        .btn-modal:hover { opacity: 0.85; }
+
+        /* ━━━ Upload overlay ━━━ */
+        .upload-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+            z-index: 10;
+        }
+
+        .upload-overlay.active { display: flex; }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border);
+            border-top-color: var(--secondary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ━━━ Responsive ━━━ */
+        @media (max-width: 768px) {
+            .header { padding: 16px 16px 0; }
+            .header h1 { font-size: 18px; }
+            .tabs { overflow-x: auto; }
+            .tab { padding: 10px 16px; font-size: 13px; }
+            .progress-section { padding: 16px; flex-wrap: wrap; }
+            .grid { padding: 12px 16px 20px; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+            .section-label { padding: 16px 16px 4px; }
+            .deadline-banner { padding: 10px 16px; }
+        }
+
+        @media (max-width: 480px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-top">
+            <div>
+                <h1>세무 자료 수집</h1>
+                <div class="header-sub">{{ company_name }} &middot; {{ accountant_name }} 전달용</div>
+            </div>
+            <div class="header-right">
+                <select class="period-select" id="periodSelect"></select>
+            </div>
+        </div>
+        <div class="tabs">
+            <div class="tab active" data-tab="vat" onclick="switchTab('vat')">
+                부가세
+                <span class="tab-badge" id="vatBadge">0/8</span>
+            </div>
+            <div class="tab" data-tab="corp" onclick="switchTab('corp')">
+                법인세
+                <span class="tab-badge" id="corpBadge">0/18</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 법인세 Deadline Banner -->
+    <div class="deadline-banner" id="deadlineBanner">
+        ⚠️ 자료 제출 기한: <strong id="deadlineDate"></strong> &middot; 신고 기한: <span id="filingDate"></span> &middot; 제출 방식: {{ accountant_method }}
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-section">
+        <div class="progress-info">
+            <div class="progress-label" id="progressLabel">수집 현황</div>
+            <div class="progress-count">
+                <span id="collectedCount">0</span><span class="total"> / <span id="totalCount">8</span></span>
+            </div>
+        </div>
+        <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+        </div>
+        <button class="btn-package" id="btnPackage" onclick="createPackage()">
+            세무사 전달 패키지 생성
+        </button>
+    </div>
+
+    <!-- 부가세 Tab -->
+    <div class="tab-content active" id="tab-vat">
+        <div class="grid" id="vatGrid"></div>
+    </div>
+
+    <!-- 법인세 Tab -->
+    <div class="tab-content" id="tab-corp">
+        <div class="section-label">
+            <h3>필수 제출 자료 <span class="count" id="reqCount">0/10</span></h3>
+        </div>
+        <div class="grid" id="corpRequiredGrid"></div>
+
+        <div class="section-label">
+            <h3>기타 제출 자료 <span class="count optional" id="optCount">0/8</span></h3>
+        </div>
+        <div class="grid" id="corpOptionalGrid"></div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Package Modal -->
+    <div class="modal-overlay" id="packageModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">세무사 전달 패키지</h2>
+            </div>
+            <div class="modal-body" id="packageBody"></div>
+            <div class="modal-footer">
+                <button class="btn-modal secondary" onclick="closeModal()">닫기</button>
+                <button class="btn-modal primary" onclick="copyKakaoMsg()">카톡 메시지 복사</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ━━━ State ━━━
+        let currentTab = "vat";
+        let currentQuarter = "{{ quarter }}";
+        let currentCorpYear = "2025";
+        let kakaoMessage = "";
+
+        // ━━━ Init ━━━
+        document.addEventListener("DOMContentLoaded", () => {
+            loadQuarters();
+            loadVatStatus();
+            loadCorpStatus();
+        });
+
+        // ━━━ Tab Switch ━━━
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === tab));
+            document.querySelectorAll(".tab-content").forEach(c => c.classList.toggle("active", c.id === `tab-${tab}`));
+
+            const banner = document.getElementById("deadlineBanner");
+            banner.classList.toggle("show", tab === "corp");
+
+            // period select 업데이트
+            updatePeriodSelect();
+
+            if (tab === "vat") {
+                loadVatStatus();
+            } else {
+                loadCorpStatus();
+            }
+        }
+
+        // ━━━ Period Select ━━━
+        function updatePeriodSelect() {
+            const select = document.getElementById("periodSelect");
+            if (currentTab === "vat") {
+                // 이미 loadQuarters에서 설정됨
+                select.style.display = "";
+            } else {
+                // 법인세: 연도 선택
+                select.innerHTML = "";
+                ["2025", "2024", "2023"].forEach(y => {
+                    const opt = document.createElement("option");
+                    opt.value = y;
+                    opt.textContent = y + "년 귀속";
+                    if (y === currentCorpYear) opt.selected = true;
+                    select.appendChild(opt);
+                });
+            }
+        }
+
+        async function loadQuarters() {
+            try {
+                const res = await fetch("/api/quarters");
+                const data = await res.json();
+                const select = document.getElementById("periodSelect");
+                select.innerHTML = "";
+                data.quarters.forEach(q => {
+                    const opt = document.createElement("option");
+                    opt.value = q;
+                    opt.textContent = q;
+                    if (q === currentQuarter) opt.selected = true;
+                    select.appendChild(opt);
+                });
+                select.addEventListener("change", (e) => {
+                    if (currentTab === "vat") {
+                        currentQuarter = e.target.value;
+                        loadVatStatus();
+                    } else {
+                        currentCorpYear = e.target.value;
+                        loadCorpStatus();
+                    }
+                });
+            } catch (e) {
+                console.error("분기 로딩 실패:", e);
+            }
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 부가세 (VAT)
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        async function loadVatStatus() {
+            try {
+                const res = await fetch(`/api/status?quarter=${currentQuarter}`);
+                const data = await res.json();
+                renderVatCards(data);
+                if (currentTab === "vat") updateProgress(data.collected, data.total);
+                document.getElementById("vatBadge").textContent = `${data.collected}/${data.total}`;
+            } catch (e) {
+                console.error("부가세 상태 로딩 실패:", e);
+            }
+        }
+
+        function renderVatCards(data) {
+            const grid = document.getElementById("vatGrid");
+            grid.innerHTML = "";
+
+            data.platforms.forEach(p => {
+                const card = createCard({
+                    id: p.id,
+                    icon: p.icon,
+                    name: p.name,
+                    desc: `${p.menu} · ${p.file_format}`,
+                    collected: p.collected,
+                    files: p.files,
+                    statusLabel: p.collected ? "완료" : "미수집",
+                    statusClass: p.collected ? "done" : "pending",
+                    showOpen: true,
+                    type: "vat",
+                    accept: ".xlsx,.xls,.pdf,.csv,.zip",
+                });
+                grid.appendChild(card);
+            });
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 법인세 (Corp Tax)
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        async function loadCorpStatus() {
+            try {
+                const res = await fetch(`/api/corp/status?year=${currentCorpYear}`);
+                const data = await res.json();
+
+                // Deadline banner
+                document.getElementById("deadlineDate").textContent = data.info.submission_deadline;
+                document.getElementById("filingDate").textContent = data.info.filing_deadline;
+
+                const reqItems = data.items.filter(i => i.category === "required");
+                const optItems = data.items.filter(i => i.category === "optional");
+
+                renderCorpCards(reqItems, "corpRequiredGrid");
+                renderCorpCards(optItems, "corpOptionalGrid");
+
+                document.getElementById("reqCount").textContent = `${data.required_collected}/${data.required_total}`;
+                document.getElementById("optCount").textContent = `${data.optional_collected}/${data.optional_total}`;
+
+                if (currentTab === "corp") updateProgress(data.total_collected, data.total);
+                document.getElementById("corpBadge").textContent = `${data.total_collected}/${data.total}`;
+            } catch (e) {
+                console.error("법인세 상태 로딩 실패:", e);
+            }
+        }
+
+        function renderCorpCards(items, gridId) {
+            const grid = document.getElementById(gridId);
+            grid.innerHTML = "";
+
+            items.forEach(item => {
+                const isReq = item.category === "required";
+                const card = createCard({
+                    id: item.id,
+                    icon: item.icon,
+                    name: item.name,
+                    desc: item.description,
+                    source: item.source,
+                    collected: item.collected,
+                    files: item.files,
+                    statusLabel: item.collected ? "완료" : (isReq ? "필수" : "해당시"),
+                    statusClass: item.collected ? "done" : (isReq ? "required" : "pending"),
+                    showOpen: false,
+                    type: "corp",
+                    accept: ".xlsx,.xls,.pdf,.csv,.zip,.jpg,.jpeg,.png,.hwp,.doc,.docx",
+                });
+                grid.appendChild(card);
+            });
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // Shared Card Builder
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        function createCard(opts) {
+            const card = document.createElement("div");
+            card.className = `card${opts.collected ? " collected" : ""}`;
+            card.id = `card-${opts.id}`;
+
+            const hasFiles = opts.collected && opts.files && opts.files.length > 0;
+            let dropContent;
+
+            if (hasFiles) {
+                // 복수 파일 목록
+                let fileItems = opts.files.map(f =>
+                    `<div class="file-item">
+                        <div class="file-item-info">
+                            <span class="file-item-name" title="${f.name}">${f.name}</span>
+                            <span class="file-item-size">${formatSize(f.size)}</span>
+                        </div>
+                        <button class="file-item-del" title="삭제"
+                                onclick="deleteSingleFile('${opts.id}', '${opts.type}', '${f.name}', event)">&times;</button>
+                    </div>`
+                ).join("");
+                dropContent = `
+                    <div class="file-list-wrap">
+                        ${fileItems}
+                        <div class="file-add-text" onclick="triggerFileInput('${opts.id}')">+ 파일 추가</div>
+                    </div>`;
+            } else {
+                dropContent = `
+                    <div class="drop-icon">📂</div>
+                    <div class="drop-text">파일을 드래그하거나<br>클릭하여 업로드</div>`;
+            }
+
+            const sourceHtml = opts.source ? `<div class="card-source">${opts.source}</div>` : "";
+            const openBtn = opts.showOpen
+                ? `<button class="btn-open" onclick="openPlatform('${opts.id}', event)">↗ 셀러센터 열기</button>`
+                : "";
+            const fileCountBadge = hasFiles ? ` (${opts.files.length})` : "";
+
+            card.innerHTML = `
+                <div class="upload-overlay" id="overlay-${opts.id}">
+                    <div class="spinner"></div>
+                </div>
+                <div class="card-header">
+                    <div class="card-title-area">
+                        <span class="card-icon">${opts.icon}</span>
+                        <span class="card-name">${opts.name}</span>
+                    </div>
+                    <span class="card-status ${opts.statusClass}">${opts.statusLabel}${fileCountBadge}</span>
+                </div>
+                <div class="card-desc">${opts.desc}</div>
+                ${sourceHtml}
+                <div class="card-drop" id="drop-${opts.id}" ${!hasFiles ? `onclick="triggerFileInput('${opts.id}')"` : ""}>
+                    ${dropContent}
+                    <input type="file" id="file-${opts.id}" accept="${opts.accept}" multiple
+                           onchange="handleFileSelect('${opts.id}', '${opts.type}', this)">
+                </div>
+                <div class="card-footer${opts.showOpen ? ' with-open' : ''}">
+                    ${openBtn}
+                    <button class="btn-delete" onclick="deleteAllFiles('${opts.id}', '${opts.type}', event)">전체 삭제</button>
+                </div>
+            `;
+
+            // Drag & Drop (복수 파일 지원)
+            card.addEventListener("dragenter", (e) => { e.preventDefault(); card.classList.add("dragover"); });
+            card.addEventListener("dragover", (e) => { e.preventDefault(); card.classList.add("dragover"); });
+            card.addEventListener("dragleave", (e) => {
+                if (!card.contains(e.relatedTarget)) card.classList.remove("dragover");
+            });
+            card.addEventListener("drop", (e) => {
+                e.preventDefault();
+                card.classList.remove("dragover");
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    uploadMultipleFiles(opts.id, opts.type, files);
+                }
+            });
+
+            return card;
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // Shared Functions
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        function updateProgress(collected, total) {
+            document.getElementById("collectedCount").textContent = collected;
+            document.getElementById("totalCount").textContent = total;
+
+            const pct = total > 0 ? (collected / total) * 100 : 0;
+            const bar = document.getElementById("progressBar");
+            bar.style.width = pct + "%";
+            bar.className = `progress-bar-fill${collected === total && total > 0 ? " complete" : ""}`;
+
+            const btn = document.getElementById("btnPackage");
+            btn.classList.toggle("active", collected > 0);
+        }
+
+        function triggerFileInput(id) {
+            document.getElementById(`file-${id}`).click();
+        }
+
+        function handleFileSelect(id, type, input) {
+            if (input.files.length > 0) {
+                uploadMultipleFiles(id, type, input.files);
+                input.value = "";  // reset for re-select
+            }
+        }
+
+        async function uploadMultipleFiles(id, type, files) {
+            const overlay = document.getElementById(`overlay-${id}`);
+            overlay.classList.add("active");
+
+            let successCount = 0;
+            let lastMsg = "";
+
+            for (const file of files) {
+                const formData = new FormData();
+                formData.append("file", file);
+
+                let url;
+                if (type === "vat") {
+                    formData.append("quarter", currentQuarter);
+                    url = `/api/upload/${id}`;
+                } else {
+                    formData.append("year", currentCorpYear);
+                    url = `/api/corp/upload/${id}`;
+                }
+
+                try {
+                    const res = await fetch(url, { method: "POST", body: formData });
+                    const data = await res.json();
+                    if (data.status === "success") {
+                        successCount++;
+                        lastMsg = data.message;
+                    } else {
+                        showToast(`${file.name}: ${data.message}`, "error");
+                    }
+                } catch (e) {
+                    showToast(`${file.name}: 업로드 실패`, "error");
+                }
+            }
+
+            if (successCount > 0) {
+                const msg = successCount > 1 ? `${successCount}개 파일 저장 완료` : lastMsg;
+                showToast(msg, "success");
+                type === "vat" ? loadVatStatus() : loadCorpStatus();
+            }
+
+            overlay.classList.remove("active");
+        }
+
+        // 개별 파일 삭제
+        async function deleteSingleFile(id, type, filename, event) {
+            event.stopPropagation();
+
+            let url;
+            if (type === "vat") {
+                url = `/api/delete/${id}?quarter=${currentQuarter}&filename=${encodeURIComponent(filename)}`;
+            } else {
+                url = `/api/corp/delete/${id}?year=${currentCorpYear}&filename=${encodeURIComponent(filename)}`;
+            }
+
+            try {
+                const res = await fetch(url, { method: "DELETE" });
+                const data = await res.json();
+                showToast(`${filename} 삭제`, "success");
+                type === "vat" ? loadVatStatus() : loadCorpStatus();
+            } catch (e) {
+                showToast("삭제 실패", "error");
+            }
+        }
+
+        // 전체 파일 삭제
+        async function deleteAllFiles(id, type, event) {
+            event.stopPropagation();
+            if (!confirm("이 항목의 모든 파일을 삭제하시겠습니까?")) return;
+
+            let url;
+            if (type === "vat") {
+                url = `/api/delete/${id}?quarter=${currentQuarter}`;
+            } else {
+                url = `/api/corp/delete/${id}?year=${currentCorpYear}`;
+            }
+
+            try {
+                const res = await fetch(url, { method: "DELETE" });
+                const data = await res.json();
+                showToast(data.message, "success");
+                type === "vat" ? loadVatStatus() : loadCorpStatus();
+            } catch (e) {
+                showToast("삭제 실패", "error");
+            }
+        }
+
+        async function openPlatform(platformId, event) {
+            event.stopPropagation();
+            const formData = new FormData();
+            formData.append("quarter", currentQuarter);
+            try {
+                const res = await fetch(`/api/open/${platformId}`, { method: "POST", body: formData });
+                const data = await res.json();
+                showToast(data.message, "success");
+            } catch (e) {
+                showToast("셀러센터 열기 실패", "error");
+            }
+        }
+
+        // ━━━ Package ━━━
+        async function createPackage() {
+            const formData = new FormData();
+            let url, title;
+
+            if (currentTab === "vat") {
+                formData.append("quarter", currentQuarter);
+                url = "/api/package";
+                title = `${currentQuarter} 부가세 자료 패키지`;
+            } else {
+                formData.append("year", currentCorpYear);
+                url = "/api/corp/package";
+                title = `${currentCorpYear}년 귀속 법인세 자료 패키지`;
+            }
+
+            try {
+                const res = await fetch(url, { method: "POST", body: formData });
+                const data = await res.json();
+                kakaoMessage = data.kakao_message || "";
+                document.getElementById("modalTitle").textContent = title;
+
+                if (currentTab === "vat") {
+                    showVatPackageModal(data);
+                } else {
+                    showCorpPackageModal(data);
+                }
+            } catch (e) {
+                showToast("패키지 생성 실패", "error");
+            }
+        }
+
+        function showVatPackageModal(data) {
+            const body = document.getElementById("packageBody");
+            let html = `<div class="section-title">📦 ${data.quarter} 부가세 자료</div>`;
+            html += `<div class="file-list"><strong>수집: ${data.collected}/${data.collected + data.missing.length}개</strong></div>`;
+
+            if (data.files && data.files.length > 0) {
+                html += `<div class="section-title">✅ 수집 완료</div><div class="file-list">`;
+                data.files.forEach(f => { html += `${f.platform}: ${f.files.join(", ")}<br>`; });
+                html += `</div>`;
+            }
+            if (data.missing && data.missing.length > 0) {
+                html += `<div class="section-title">❌ 미수집</div><div class="missing-list">`;
+                data.missing.forEach(m => { html += `• ${m}<br>`; });
+                html += `</div>`;
+            }
+            html += `<div class="section-title">💬 카톡 메시지</div>`;
+            html += `<div class="kakao-msg">${escapeHtml(data.kakao_message || "")}</div>`;
+
+            body.innerHTML = html;
+            document.getElementById("packageModal").classList.add("active");
+        }
+
+        function showCorpPackageModal(data) {
+            const body = document.getElementById("packageBody");
+            let html = `<div class="section-title">📦 ${data.year}년 귀속 법인세 자료</div>`;
+            html += `<div class="file-list"><strong>수집: ${data.collected}/${data.collected + data.missing_required.length + data.missing_optional.length}개</strong></div>`;
+
+            if (data.files && data.files.length > 0) {
+                html += `<div class="section-title">✅ 수집 완료</div><div class="file-list">`;
+                data.files.forEach(f => { html += `${f.item}: ${f.files.join(", ")}<br>`; });
+                html += `</div>`;
+            }
+            if (data.missing_required && data.missing_required.length > 0) {
+                html += `<div class="section-title">❌ 필수 미제출</div><div class="missing-list">`;
+                data.missing_required.forEach(m => { html += `• ${m}<br>`; });
+                html += `</div>`;
+            }
+            if (data.missing_optional && data.missing_optional.length > 0) {
+                html += `<div class="section-title">☐ 기타 미제출 (해당시)</div><div class="missing-opt-list">`;
+                data.missing_optional.forEach(m => { html += `• ${m}<br>`; });
+                html += `</div>`;
+            }
+            html += `<div class="section-title">💬 카톡 메시지</div>`;
+            html += `<div class="kakao-msg">${escapeHtml(data.kakao_message || "")}</div>`;
+
+            body.innerHTML = html;
+            document.getElementById("packageModal").classList.add("active");
+        }
+
+        function closeModal() {
+            document.getElementById("packageModal").classList.remove("active");
+        }
+
+        function copyKakaoMsg() {
+            navigator.clipboard.writeText(kakaoMessage).then(() => {
+                showToast("카톡 메시지 복사 완료", "success");
+            }).catch(() => {
+                showToast("복사 실패 — 수동으로 복사해주세요", "error");
+            });
+        }
+
+        // ━━━ Toast ━━━
+        function showToast(message, type = "info") {
+            const container = document.getElementById("toastContainer");
+            const toast = document.createElement("div");
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = "0";
+                toast.style.transform = "translateX(100%)";
+                toast.style.transition = "all 0.3s";
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ━━━ Helpers ━━━
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + " B";
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + " KB";
+            return (bytes / 1048576).toFixed(1) + " MB";
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement("div");
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ━━━ Auto-refresh ━━━
+        setInterval(() => {
+            if (currentTab === "vat") loadVatStatus();
+            else loadCorpStatus();
+        }, 10000);
+
+        // ━━━ Prevent default drag ━━━
+        document.body.addEventListener("dragover", (e) => e.preventDefault());
+        document.body.addEventListener("drop", (e) => e.preventDefault());
+    </script>
+</body>
+</html>

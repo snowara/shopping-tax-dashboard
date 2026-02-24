@@ -1,0 +1,24 @@
+# 사용자 개인 설정
+config_local.json
+
+# 업로드/출력 파일 (개인 데이터)
+input/*
+!input/.gitkeep
+output/*
+!output/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
