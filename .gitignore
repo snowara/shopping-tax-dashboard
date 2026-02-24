@@ -22,3 +22,8 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+# PyInstaller 빌드
+build/
+dist/
+*.spec

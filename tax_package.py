@@ -16,10 +16,8 @@ from openpyxl import Workbook
 from config import load_config
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
+from paths import INPUT_DIR, OUTPUT_DIR
 
-BASE_DIR = Path(__file__).parent
-INPUT_DIR = BASE_DIR / "input"
-OUTPUT_DIR = BASE_DIR / "output"
 INPUT_DIR.mkdir(exist_ok=True)
 OUTPUT_DIR.mkdir(exist_ok=True)
 

@@ -26,10 +26,8 @@ from pathlib import Path
 import pandas as pd
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+from paths import INPUT_DIR, OUTPUT_DIR
 
-BASE_DIR = Path(__file__).parent
-INPUT_DIR = BASE_DIR / "input"
-OUTPUT_DIR = BASE_DIR / "output"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 

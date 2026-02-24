@@ -6,7 +6,7 @@ config_local.json을 읽고/쓰고, 첫 실행 시 대화형 설정 마법사를
 import json
 from pathlib import Path
 
-CONFIG_PATH = Path(__file__).parent / "config_local.json"
+from paths import CONFIG_PATH
 
 DEFAULTS = {
     "company_name": "내 쇼핑몰",

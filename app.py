@@ -16,17 +16,14 @@ import json
 import os
 import shutil
 import threading
+import webbrowser
 from datetime import datetime
 from pathlib import Path
 
 from flask import Flask, render_template, request, jsonify, send_file
 
 from config import load_config, is_configured, run_setup_wizard
-
-BASE_DIR = Path(__file__).parent
-INPUT_DIR = BASE_DIR / "input"
-OUTPUT_DIR = BASE_DIR / "output"
-TEMPLATE_DIR = BASE_DIR / "templates"
+from paths import APP_DIR, INPUT_DIR, OUTPUT_DIR, TEMPLATE_DIR
 
 INPUT_DIR.mkdir(exist_ok=True)
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -800,6 +797,14 @@ def main():
     print(f"\n  [법인세] 필수 {req_c}/{len(req)} · 기타 {opt_c}/{len(opt)}")
 
     print(f"\n  브라우저에서 http://localhost:{port} 접속하세요.\n")
+
+    # 브라우저 자동 열기 (2초 후)
+    if not args.debug:
+        def open_browser():
+            import time
+            time.sleep(2)
+            webbrowser.open(f"http://localhost:{port}")
+        threading.Thread(target=open_browser, daemon=True).start()
 
     app.run(host="0.0.0.0", port=port, debug=args.debug)
 

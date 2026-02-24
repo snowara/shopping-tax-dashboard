@@ -18,9 +18,23 @@
 - **세무사 전달 패키지** — 체크리스트 엑셀 + 카톡 메시지 자동 생성
 - **부가세 셀프 체크** — 이카운트 vs 홈택스 데이터 대조
 
-## 3분 설치 가이드
+## 설치 방법
 
-### macOS / Linux
+### 방법 1: 실행파일 다운로드 (추천, Python 불필요)
+
+[GitHub Releases](https://github.com/snowara/shopping-tax-dashboard/releases)에서 OS에 맞는 ZIP 파일을 다운로드하세요.
+
+| OS | 파일 |
+|----|------|
+| Windows | `세무자료수집-Windows.zip` |
+| macOS | `세무자료수집-macOS.zip` |
+
+1. ZIP 압축 해제
+2. `세무자료수집` (macOS) 또는 `세무자료수집.exe` (Windows) 실행
+3. 첫 실행 시 설정 마법사가 자동으로 뜹니다
+4. 브라우저가 자동으로 열립니다
+
+### 방법 2: 소스코드 설치 (개발자용)
 
 ```bash
 git clone https://github.com/snowara/shopping-tax-dashboard.git
@@ -28,24 +42,27 @@ cd shopping-tax-dashboard
 bash setup.sh
 ```
 
-### 수동 설치
+또는 수동 설치:
 
 ```bash
 git clone https://github.com/snowara/shopping-tax-dashboard.git
 cd shopping-tax-dashboard
-
-# 가상환경 (권장)
 python3 -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
-
-# 패키지 설치
 pip install -r requirements.txt
-
-# 실행
 python3 app.py
 ```
 
 첫 실행 시 **설정 마법사**가 자동으로 실행됩니다. 회사명, 대표자명, 세무사명을 입력하면 끝!
+
+### 실행파일 직접 빌드
+
+```bash
+pip install pyinstaller
+python build.py --clean
+```
+
+결과물: `dist/세무자료수집/` 폴더를 통째로 복사하여 배포.
 
 ## 사용법
 
